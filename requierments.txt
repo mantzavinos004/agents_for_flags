@@ -1,1 +1,5 @@
-typer
+- Python 3.8+
+- nmap
+- httpx
+- whatweb
+- typer

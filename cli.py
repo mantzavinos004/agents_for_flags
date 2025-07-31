@@ -8,7 +8,7 @@ app = typer.Typer()
 
 @app.command()
 def recon(target: str):
-  "Run initial recon with AI suggestions"
+  "Run initial recon with automated scanning and AI suggestions"
   run_recon(target)
   
 @app.command()
