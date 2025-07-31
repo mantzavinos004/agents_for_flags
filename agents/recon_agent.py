@@ -1,10 +1,11 @@
 import subprocess
 import os
 import re
+from transformers import pipeline
 
 def run_recon(target):
     print(f"[+] Starting automated recon on: {target}\n")
-
+    print("[*] This may take a while...\n")
     print("[*] Running nmap scan...")
     nmap_cmd = ["nmap", "-sC", "-sV", "-T4", "-oN", "recon_nmap.txt", target]
     subprocess.run(nmap_cmd)
@@ -36,6 +37,7 @@ def parse_nmap_output(path):
     if ports:
         print("[+] Open TCP Ports Found:", ", ".join(ports))
         suggest_from_ports(ports)
+        ai_suggest_next_steps()
     else:
         print("[!] No open TCP ports found.")
 
@@ -55,3 +57,17 @@ def suggest_from_ports(ports):
             print(suggestions[port])
         else:
             print(f"[*] Port {port} open - check manually for associated service.")
+
+def ai_suggest_next_steps(open_ports, banners=None):
+    print("\n[+] AI Suggestions based on recon results:")
+    prompt = f"Given the open ports {', '.join(open_ports)}"
+    if banners:
+        prompt += f" and the following service info: {banners}"
+    prompt += ". Suggest next penetration testing steps."
+
+    try:
+        generator = pipeline("text-generation", model="gpt2")
+        ai_response = generator(prompt, max_length=150, num_return_sequences=1)[0]['generated_text']
+        print("[AI]:", ai_response.strip())
+    except Exception as e:
+        print("[!] AI suggestion failed:", e)
