@@ -1,5 +1,7 @@
-- Python 3.8+
-- nmap
-- httpx
-- whatweb
-- typer
+# Python 3.8+
+python-nmap
+httpx
+whatweb
+typer
+transformers
+torch
